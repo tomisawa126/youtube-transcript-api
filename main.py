@@ -15,8 +15,9 @@ def get_transcript(video_id, lang="ja"):
         'skip_download': True,
         'quiet': True,
         'writesubtitles': True,
-        'subtitleslangs': [lang],  # ここを修正
-        'force_generic_extractor': True,
+        'subtitleslangs': [lang],
+        'subtitlesformat': 'vtt',
+        'cookiefile': 'cookies.txt',  # クッキーを使用して認証
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
