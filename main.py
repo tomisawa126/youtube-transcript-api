@@ -27,7 +27,7 @@ def get_transcript(video_id, lang="ja"):
         'writesubtitles': True,
         'subtitleslangs': [lang],
         'subtitlesformat': 'vtt',
-        'cookiefile': '/home/render/project/src/cookies.txt',  # 正しいパスに変更
+        'cookiefile': '/opt/render/project/src/cookies.txt'
         'noplaylist': True,  # プレイリストではなく単一の動画を取得
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
