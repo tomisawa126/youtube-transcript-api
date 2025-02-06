@@ -28,6 +28,7 @@ def get_transcript(video_id, lang="ja"):
         'subtitleslangs': [lang],
         'subtitlesformat': 'vtt',
         'cookiefile': 'cookies.txt',  # クッキーを使用して認証
+        'noplaylist': True,  # プレイリストではなく単一の動画を取得
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
@@ -38,6 +39,10 @@ def get_transcript(video_id, lang="ja"):
                 return transcript_url  # 字幕のURLを返す
             else:
                 return "No subtitles available for this video."
+        except yt_dlp.utils.ExtractorError as e:
+            return f"ExtractorError: {str(e)}"
+        except yt_dlp.utils.DownloadError as e:
+            return f"DownloadError: {str(e)}"
         except Exception as e:
             return str(e)
 
@@ -50,8 +55,8 @@ def transcript_api():
 
     transcript_text = get_transcript(video_id)
     
-    if "No subtitles available" in transcript_text:
-        return jsonify({"error": "No subtitles available or video is restricted."}), 400
+    if "No subtitles available" in transcript_text or "ExtractorError" in transcript_text or "DownloadError" in transcript_text:
+        return jsonify({"error": transcript_text}), 400
 
     return jsonify({"transcript": transcript_text})
 
