@@ -1,6 +1,16 @@
 from flask import Flask, request, jsonify
 import yt_dlp
+import os
 import re
+
+# 🌟 環境変数 COOKIES からデータを取得し、cookies.txt を作成
+cookies_content = os.getenv("COOKIES")
+if cookies_content:
+    with open("cookies.txt", "w") as f:
+        f.write(cookies_content)
+    print("✅ cookies.txt を作成しました！")
+else:
+    print("⚠️ 環境変数 COOKIES が設定されていません！")
 
 app = Flask(__name__)
 
