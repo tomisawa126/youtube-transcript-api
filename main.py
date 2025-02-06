@@ -1,18 +1,25 @@
-from flask import Flask, request, jsonify
-import yt_dlp
 import os
 import re
+import yt_dlp
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
 
 # 🌟 環境変数 COOKIES からデータを取得し、cookies.txt を作成
 cookies_content = os.getenv("COOKIES")
+cookies_path = "/opt/render/project/src/cookies.txt"  # ✅ cookies.txt のパスを統一
+
 if cookies_content:
-    with open("cookies.txt", "w") as f:
+    with open(cookies_path, "w") as f:
         f.write(cookies_content)
     print("✅ cookies.txt を作成しました！")
+
+    # 🔍 デバッグ: cookies.txt の中身をログ出力
+    print("🔹 cookies.txt の中身:")
+    with open(cookies_path, "r") as f:
+        print(f.read())  # 環境変数から正しく書き込まれたか確認
 else:
     print("⚠️ 環境変数 COOKIES が設定されていません！")
-
-app = Flask(__name__)
 
 def extract_video_id(url):
     """YouTubeのURLから動画IDを抽出"""
@@ -27,8 +34,8 @@ def get_transcript(video_id, lang="ja"):
         'writesubtitles': True,
         'subtitleslangs': [lang],
         'subtitlesformat': 'vtt',
-        'cookiefile': '/opt/render/project/src/cookies.txt'  # 正しいパスに変更！　
-        'noplaylist': True,  # プレイリストではなく単一の動画を取得
+        'cookiefile': cookies_path,  # ✅ 正しいパスに修正
+        'noplaylist': True  # ✅ カンマを追加して構文エラーを修正
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
